@@ -2,6 +2,11 @@
 
 (* Created by the Wolfram Workbench Jun 17, 2013 *)
 
+BeginPackage["NumericAMA`"]
+(* Exported symbols added here with SymbolName::usage *) 
+
+(* Mathematica Package *)
+
 BeginPackage["NumericAMA`",{"SymbolicAMA`"}]
 (* Exported symbols added here with SymbolName::usage *)  
 $zeroTol[]:=10^(-10)
