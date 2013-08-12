@@ -2,10 +2,6 @@
 
 (* Created by the Wolfram Workbench Jun 17, 2013 *)
 
-BeginPackage["NumericAMA`"]
-(* Exported symbols added here with SymbolName::usage *) 
-
-(* Mathematica Package *)
 
 BeginPackage["NumericAMA`",{"SymbolicAMA`"}]
 (* Exported symbols added here with SymbolName::usage *)  
@@ -142,7 +138,8 @@ With[{evlsLilevcs=Eigensystem[Transpose[liltmLilJs[[1]]]]},
 With[{lrgEvls=Flatten[Position[Abs[#]>1+1.0*^-10& /@evlsLilevcs[[1]],True]]},
 expandedevc=expanderFunc[liltmLilJs[[2]],Length[tm]]/@evlsLilevcs[[2,lrgEvls]];
 With[{qmat=Join[zfHf[[1]],expandedevc]},
-If[Length[qmat] =!= leads*Length[hmat],Throw[{"qmat incorrect number rows",keepStuff,evlsLilevcs[[1]]}]];
+If[And[And[leads==0,Length[qmat] =!= Length[hmat]],Length[qmat] =!= leads*Length[hmat]],
+	Throw[{"qmat incorrect number rows",keepStuff,evlsLilevcs[[1]]}]];
 With[{bmat=If[lags===0&&leads===0,zeroMatrix[hrows],numericComputeB[hmat,qmat]]},
 With[{smat=Inverse[rescaler].If[lags===0&&leads===0,hmat,
 numericObservableStructure[ilag,hcomplr,qmat]]},
@@ -239,27 +236,28 @@ secondQR[[1]],
 
 
 
-numericComputeBPhiF[hmat_?MatrixQ,qmat_?MatrixQ]:=
+numericComputeBPhiF[hmat_?MatrixQ,qmat_?MatrixQ,leads_Integer]:=
 With[{qRows=Length[qmat],qCols=If[qmat==={},0,Length[qmat[[1]]]],hRows=Length[hmat]},
-With[{leads=qRows/hRows,hzero=subMatrix[hmat,{1,qCols-qRows+1},hRows*{1,1}],
-hplus=subMatrix[hmat,{1,qCols-qRows+1+hRows},{hRows,qRows}]},
+With[{hzero=subMatrix[hmat,{1,qCols-qRows+1},hRows*{1,1}],
+hplus=If[leads==0,0,subMatrix[hmat,{1,qCols-qRows+1+hRows},{hRows,qRows}]]},
 With[{},
 If[False,{{},Inverse[hzero],{"notImplemented"}},
 With[{bmats=numericAvoidInverse[
 -subMatrix[qmat,{1,qCols-qRows+1},qRows*{1,1}],
 subMatrix[qmat,{1,1},{qRows,qCols-qRows}]]},
 With[{brmats=subMatrix[bmats,{1,qCols-qRows-hRows+1},{qRows,hRows}]},
-With[{phimat=Inverse[hzero + hplus . brmats]},
+With[{phimat=Inverse[hzero + If[leads==0,0,hplus . brmats]]},(*Print["qmat for fmat",{qmat,qRows,hRows}];*)
 With[{phihp=-phimat . hplus,
 slctrmat=If[leads>1,
 blockMatrix[{{zeroMatrix[(leads-1)*hRows,hRows]},{IdentityMatrix[hRows]},
 {brmats}}],blockMatrix[{{IdentityMatrix[hRows]},
 {brmats}}]]},
-With[{busyRes= 
+With[{busyRes= If[leads==0,0,
 Nest[{(*Print["hi",leads,"leads"];*)Append[#[[1]],phihp. subMatrix[#[[2]],{1,1},{(leads)*hRows,hRows}]],
-Drop[#[[2]],hRows]}&,{{},slctrmat},leads][[1]]},(*Print["howdy",Dimensions[busyRes],busyRes];*)
-With[{fmat=If[leads>1,
-		blockMatrix[{{zeroMatrix[qCols-qRows-hRows,hRows],IdentityMatrix[qCols-qRows-hRows]},busyRes}],busyRes[[1]]]},
+Drop[#[[2]],hRows]}&,{{},slctrmat},leads][[1]]]},
+(*Print["howdy",Dimensions[busyRes],busyRes];*)
+With[{fmat=If[leads==0,zeroMatrix[hRows,hRows],If[leads>1,
+		blockMatrix[{{zeroMatrix[qCols-qRows-hRows,hRows],IdentityMatrix[qCols-qRows-hRows]},busyRes}],busyRes[[1]]]]},
 {bmats,phimat,fmat}]]]]]]]]]]
 
 numericComputeB[hmat_?MatrixQ,qmat_?MatrixQ]:=
