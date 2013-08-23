@@ -293,7 +293,7 @@ With[{hfb=subMatrix[hmat,{1,qcols-qrows+1+hrows},{hrows,qrows}] . bmat},
 With[{ltau=Length[bmat[[1]]]},Off[General::stop];Message[golly::gee,ltau,Dimensions[bmat],hrows,qcols,qrows];On[General::stop];
 With[{bbar=If[ltau==hrows,bmat,
 blockMatrix[{{zeroMatrix[ltau-hrows,hrows],IdentityMatrix[ltau-hrows]},
-{subMatrix[bmat,{1,1},{hrows,ltau}]}}]]},
+{subMatrix[bmat,{1,1},{hrows,hrows}],subMatrix[bmat,{1,hrows+1},{hrows,ltau-hrows}]}}]]},
 With[{bpart=If[ilag<1,blockMatrix[{{zeroMatrix[hrows],hfb}}],
 blockMatrix[{{hfb . MatrixPower[bbar,ilag],zeroMatrix[hrows,hrows*(ilag)]}}]]},
 hpart+bpart]]]]]]]]]
