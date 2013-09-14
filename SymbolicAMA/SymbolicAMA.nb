@@ -1,0 +1,8 @@
+Notebook[{
+},
+WindowSize->{740, 818},
+WindowMargins->{{331, Automatic}, {46, Automatic}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (February 7, 2013)",
+StyleDefinitions->"Default.nb"
+]
+
