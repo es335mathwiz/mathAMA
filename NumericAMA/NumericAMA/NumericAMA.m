@@ -236,8 +236,9 @@ secondQR[[1]],
 
 
 
-numericComputeBPhiF[hmat_?MatrixQ,qmat_?MatrixQ,leads_Integer]:=
+numericComputeBPhiF[hmat_?MatrixQ,qmat_?MatrixQ]:=
 With[{qRows=Length[qmat],qCols=If[qmat==={},0,Length[qmat[[1]]]],hRows=Length[hmat]},
+With[{leads=qRows/hRows},
 With[{hzero=subMatrix[hmat,{1,qCols-qRows+1},hRows*{1,1}],
 hplus=If[leads==0,0,subMatrix[hmat,{1,qCols-qRows+1+hRows},{hRows,qRows}]]},
 With[{},
@@ -256,9 +257,12 @@ With[{busyRes= If[leads==0,0,
 Nest[{(*Print["hi",leads,"leads"];*)Append[#[[1]],phihp. subMatrix[#[[2]],{1,1},{(leads)*hRows,hRows}]],
 Drop[#[[2]],hRows]}&,{{},slctrmat},leads][[1]]]},
 (*Print["howdy",Dimensions[busyRes],busyRes];*)
-With[{fmat=If[leads==0,zeroMatrix[hRows,hRows],If[leads>1,
-		blockMatrix[{{zeroMatrix[qCols-qRows-hRows,hRows],IdentityMatrix[qCols-qRows-hRows]},busyRes}],busyRes[[1]]]]},
-{bmats,phimat,fmat}]]]]]]]]]]
+With[{fmat=If[leads==0,zeroMatrix[hRows,hRows],
+If[leads>1,
+With[{theBottom=blockMatrix[{busyRes}]},
+blockMatrix[{{
+blockMatrix[{{zeroMatrix[qCols-qRows-hRows,hRows],IdentityMatrix[qCols-qRows-hRows]}}]},{theBottom}}]],busyRes[[1]]]]},
+{bmats,phimat,fmat}]]]]]]]]]]]
 
 numericComputeB[hmat_?MatrixQ,qmat_?MatrixQ]:=
 With[{qRows=Length[qmat],qCols=If[qmat==={},0,Length[qmat[[1]]]],hRows=Length[hmat]},
