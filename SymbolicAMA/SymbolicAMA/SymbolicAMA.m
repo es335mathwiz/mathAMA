@@ -10,6 +10,10 @@ $rankDeficiency::usage="symbol for error return"
 vec::usage=
 "vec[mat_List]"
 
+
+
+
+
 computeXNext::usage="computeXNext[xInit_?MatrixQ,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]"
 
 computeXPath::usage="computeXPath[xInit_?MatrixQ,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]"
@@ -77,6 +81,7 @@ symbolicEigNS::usage = "symbolicEigNS  "
 
 seriesAVal::usage = "seriesAVal  "
 
+genericQmat::usage="genericQmat"
 Begin["`Private`"] (* Begin Private Context *) 
 
 zeroMatrix[anInt_Integer]:=ConstantArray[0,{anInt,anInt}]
@@ -93,6 +98,17 @@ symbolicRightMostAllZeroQ[dim_,x_]:=
 With[{lilvec=Take[x,-dim]},
         If[Apply[And, (Map[Simplify[#] == 0&, lilvec])],
                 True,False,False]]
+
+genericQmat[needed_Integer,
+paramSubs_List,evls_?VectorQ,evcs_?MatrixQ,zf_?MatrixQ]:=
+If[evcs===$Failed,$Failed,
+With[{bigEvals=Flatten[Position[Abs[#]>1& /@(evls/.paramSubs),True]]},
+If[Length[bigEvals]=!=needed-Length[zf],$Failed,Join[zf,evcs[[bigEvals]]]]]]
+
+
+
+genericQmat[___,$Failed,___]:=$Failed
+
 
 (*
 symbolicRightMostAllZeroQ[dim_,x_]:=
@@ -139,7 +155,20 @@ FixedPoint[symbolicShiftRightAndRecord[
         {{},hmat},Length[hmat[[1]]],
         SameTest->(Length[#1[[1]]] ===Length[#2[[1]]]&)],
         $zeroRow,$rankDeficiency[#1]&]
+(*
 
+expandedEVecs=Array[0&,{1,4}]
+expandedEVecs[[All,positions]]=lileVecs[[{2}]]
+
+
+*)
+
+
+Unprotect[TimeConstrained];(*TimeConstrained[$Failed,___]:=$Failed;*)
+
+TimeConstrained[
+  symbolicComputeBPhiF[_, $Failed], ___] := {$Failed, $Failed, \
+$Failed}; Protect[TimeConstrained];
 
 symbolicEliminateInessentialLags[AMatrixVariableListPair_]:=
     Block[{firstzerocolumn,matrixsize},
@@ -288,6 +317,11 @@ With[{dim=Dimensions[aMat][[1]]},
 
 seriesAVal[theVal_,varDegsPos_?MatrixQ]:=
 Series@@ Prepend[varDegsPos,theVal]
+
+symbolicComputeB[___,$Failed,___]:=$Failed
+symbolicComputeBPhiF[___,$Failed,___]:={$Failed,$Failed,$Failed}
+
+
 
 symbolicComputeBPhiF[hmat_?MatrixQ,qmat_?MatrixQ]:=
 With[{qRows=Length[qmat],qCols=Length[qmat[[1]]],hRows=Length[hmat]},
