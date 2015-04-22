@@ -1,8 +1,242 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      8056,        232]
+NotebookOptionsPosition[      7252,        200]
+NotebookOutlinePosition[      7597,        215]
+CellTagsIndexPosition[      7554,        212]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
 Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<NumericAMA`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.5887037815237284`*^9, 3.5887037916234255`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Get", "::", "noopen"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Cannot open \[NoBreak]\\!\\(\\\"NumericAMA`\\\"\\)\
+\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/noopen\\\", ButtonNote -> \
+\\\"Get::noopen\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.5887037924134016`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Needs", "::", "nocont"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Context \[NoBreak]\\!\\(\\\"NumericAMA`\\\"\\)\[NoBreak] \
+was not created when Needs was evaluated. \\!\\(\\*ButtonBox[\\\"\
+\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/Needs/nocont\\\", ButtonNote -> \
+\\\"Needs::nocont\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.5887037924534006`*^9}],
+
+Cell[BoxData["$Failed"], "Output",
+ CellChangeTimes->{3.5887037924534006`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Directory", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.5887038681811285`*^9, 3.588703870831049*^9}}],
+
+Cell[BoxData["\<\"\\\\\\\\rsmanas\\\\fldredir$\\\\m1gsa00\\\\Documents\"\>"], \
+"Output",
+ CellChangeTimes->{3.5887038711710386`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$Path"], "Input",
+ CellChangeTimes->{{3.588703851961615*^9, 3.588703853321574*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"C:\\\\Users\\\\m1gsa00\\\\eclipse-installations\\\\3.8\\\\\
+eclipse\\\\configuration\\\\org.eclipse.osgi\\\\bundles\\\\217\\\\2\\\\.cp\\\\\
+MathematicaSource\"\>", ",", "\<\"G:/git/mathAMA/SymbolicAMA\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\SystemFiles\\\\Links\"\>", 
+   ",", "\<\"\\\\\\\\rsmanas\\\\fldredir$\\\\m1gsa00\\\\AppData\\\\Roaming\\\\\
+Mathematica\\\\Kernel\"\>", 
+   ",", "\<\"\\\\\\\\rsmanas\\\\fldredir$\\\\m1gsa00\\\\AppData\\\\Roaming\\\\\
+Mathematica\\\\Autoload\"\>", 
+   ",", "\<\"\\\\\\\\rsmanas\\\\fldredir$\\\\m1gsa00\\\\AppData\\\\Roaming\\\\\
+Mathematica\\\\Applications\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Kernel\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\ProgramData\\\\Mathematica\\\\Applications\"\>", 
+   ",", "\<\".\"\>", ",", "\<\"C:\\\\Users\\\\m1gsa00\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\AddOns\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\AddOns\\\\LegacyPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\SystemFiles\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\AddOns\\\\Autoload\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\AddOns\\\\Applications\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\AddOns\\\\ExtraPackages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\SystemFiles\\\\Kernel\\\\Packages\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\Documentation\\\\English\\\\System\"\>", 
+   ",", "\<\"C:\\\\Program Files\\\\Wolfram \
+Research\\\\Mathematica\\\\9.0\\\\SystemFiles\\\\Data\\\\ICC\"\>"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.5887038539615555`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"hmat", "=", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{".3", ",", 
+      RowBox[{"-", "1"}], ",", ".5"}], "}"}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"psimat", "=", 
+    RowBox[{"{", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}], "}"}]}], ";"}], 
+  "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "zfHf", ",", "tm", ",", "liltmLilJs", ",", "evlsLilevcs", ",", "qmat", 
+      ",", "bmat0", ",", "smat", ",", "s0inv"}], "}"}], "=", 
+    RowBox[{"numericAMA", "[", 
+     RowBox[{"hmat", ",", "1", ",", "0"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"bmat", ",", "phimat", ",", "fmat"}], "}"}], "=", 
+    RowBox[{"numericComputeBPhiF", "[", 
+     RowBox[{"hmat", ",", "qmat"}], "]"}]}], ";"}], 
+  "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"zpath", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", "0", "}"}], ",", 
+     RowBox[{"{", "0", "}"}]}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"xinit", "=", 
+    RowBox[{"{", 
+     RowBox[{"{", "0", "}"}], "}"}]}], ";"}], "\n"}], "\[IndentingNewLine]", 
+ RowBox[{"computeDelXPath", "[", 
+  RowBox[{"bmat", ",", "phimat", ",", "fmat", ",", "psimat", ",", "zpath"}], 
+  "]"}], "\n"}], "Input",
+ CellChangeTimes->{{3.588703753774561*^9, 3.588703753774561*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "shape"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Lists \[NoBreak]\\!\\({zfHf, tm, liltmLilJs, evlsLilevcs, \
+qmat, bmat0, smat, s0inv}\\)\[NoBreak] and \
+\[NoBreak]\\!\\(numericAMA[\\(\\(\\(\\({\\({0.3`, \\(\\(-1\\)\\), \
+0.5`}\\)}\\)\\), 1, 0\\)\\)]\\)\[NoBreak] are not the same shape. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/Set/shape\\\", \
+ButtonNote -> \\\"Set::shape\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.588703758964405*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "shape"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Lists \[NoBreak]\\!\\({bmat, phimat, fmat}\\)\[NoBreak] \
+and \[NoBreak]\\!\\(numericComputeBPhiF[\\(\\(\\(\\({\\({0.3`, \
+\\(\\(-1\\)\\), 0.5`}\\)}\\)\\), qmat\\)\\)]\\)\[NoBreak] are not the same \
+shape. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/Set/shape\\\", ButtonNote -> \
+\\\"Set::shape\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.588703758974405*^9}],
+
+Cell[BoxData[
+ RowBox[{"computeDelXPath", "[", 
+  RowBox[{"bmat", ",", "phimat", ",", "fmat", ",", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1"}], "}"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", "0", "}"}], ",", 
+     RowBox[{"{", "0", "}"}]}], "}"}]}], "]"}]], "Output",
+ CellChangeTimes->{3.588703758974405*^9}]
+}, Open  ]]
 },
 WindowSize->{740, 818},
-WindowMargins->{{331, Automatic}, {46, Automatic}},
-FrontEndVersion->"9.0 for Linux x86 (64-bit) (February 7, 2013)",
+WindowMargins->{{240, Automatic}, {Automatic, 57}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (January 25, 2013)",
 StyleDefinitions->"Default.nb"
 ]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 146, 2, 31, "Input"],
+Cell[728, 26, 443, 10, 21, "Message"],
+Cell[1174, 38, 482, 10, 21, "Message"],
+Cell[1659, 50, 78, 1, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1774, 56, 125, 2, 31, "Input"],
+Cell[1902, 60, 133, 2, 87, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2072, 67, 97, 1, 31, "Input"],
+Cell[2172, 70, 2031, 36, 412, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4240, 111, 1450, 46, 292, "Input"],
+Cell[5693, 159, 609, 12, 39, "Message"],
+Cell[6305, 173, 577, 12, 21, "Message"],
+Cell[6885, 187, 351, 10, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
 
