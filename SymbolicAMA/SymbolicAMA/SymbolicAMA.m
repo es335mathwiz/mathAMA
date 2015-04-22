@@ -11,6 +11,15 @@ vec::usage=
 "vec[mat_List]"
 
 
+
+
+
+computeXNext::usage="computeXNext[xInit_?MatrixQ,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]"
+
+computeXPath::usage="computeXPath[xInit_?MatrixQ,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]"
+
+computeDelXPath::usage="computeXPath[bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]"
+
 zeroMatrix::usage="zeroMatrix[dims]"
 subMatrix::usage="subMatrix[hmat,offset,rowscols]"
 blockMatrix::usage="blockMatrix[{{aa,bb,cc}}]"
@@ -72,6 +81,7 @@ symbolicEigNS::usage = "symbolicEigNS  "
 
 seriesAVal::usage = "seriesAVal  "
 
+genericQmat::usage="genericQmat"
 Begin["`Private`"] (* Begin Private Context *) 
 
 zeroMatrix[anInt_Integer]:=ConstantArray[0,{anInt,anInt}]
@@ -88,6 +98,17 @@ symbolicRightMostAllZeroQ[dim_,x_]:=
 With[{lilvec=Take[x,-dim]},
         If[Apply[And, (Map[Simplify[#] == 0&, lilvec])],
                 True,False,False]]
+
+genericQmat[needed_Integer,
+paramSubs_List,evls_?VectorQ,evcs_?MatrixQ,zf_?MatrixQ]:=
+If[evcs===$Failed,$Failed,
+With[{bigEvals=Flatten[Position[Abs[#]>1& /@(evls/.paramSubs),True]]},
+If[Length[bigEvals]=!=needed-Length[zf],$Failed,Join[zf,evcs[[bigEvals]]]]]]
+
+
+
+genericQmat[___,$Failed,___]:=$Failed
+
 
 (*
 symbolicRightMostAllZeroQ[dim_,x_]:=
@@ -134,7 +155,20 @@ FixedPoint[symbolicShiftRightAndRecord[
         {{},hmat},Length[hmat[[1]]],
         SameTest->(Length[#1[[1]]] ===Length[#2[[1]]]&)],
         $zeroRow,$rankDeficiency[#1]&]
+(*
 
+expandedEVecs=Array[0&,{1,4}]
+expandedEVecs[[All,positions]]=lileVecs[[{2}]]
+
+
+*)
+
+
+Unprotect[TimeConstrained];(*TimeConstrained[$Failed,___]:=$Failed;*)
+
+TimeConstrained[
+  symbolicComputeBPhiF[_, $Failed], ___] := {$Failed, $Failed, \
+$Failed}; Protect[TimeConstrained];
 
 symbolicEliminateInessentialLags[AMatrixVariableListPair_]:=
     Block[{firstzerocolumn,matrixsize},
@@ -284,6 +318,11 @@ With[{dim=Dimensions[aMat][[1]]},
 seriesAVal[theVal_,varDegsPos_?MatrixQ]:=
 Series@@ Prepend[varDegsPos,theVal]
 
+symbolicComputeB[___,$Failed,___]:=$Failed
+symbolicComputeBPhiF[___,$Failed,___]:={$Failed,$Failed,$Failed}
+
+
+
 symbolicComputeBPhiF[hmat_?MatrixQ,qmat_?MatrixQ]:=
 With[{qRows=Length[qmat],qCols=Length[qmat[[1]]],hRows=Length[hmat]},
 With[{leads=qRows/hRows,hzero=subMatrix[hmat,{1,qCols-qRows+1},hRows*{1,1}],
@@ -302,7 +341,9 @@ With[{busyRes=
 Nest[{(*Print["hi",leads,"leads"];*)Append[#[[1]],phihp. subMatrix[#[[2]],{1,1},{(leads)*hRows,hRows}]],
 Drop[#[[2]],hRows]}&,{{},slctrmat},leads][[1]]},(*Print["howdy",Dimensions[busyRes],busyRes];*)
 With[{fmat=If[leads>1,
-		blockMatrix[{{zeroMatrix[qCols-qRows-hRows,hRows],IdentityMatrix[qCols-qRows-hRows]},busyRes}],busyRes[[1]]]},
+With[{theBottom=blockMatrix[{busyRes}]},
+blockMatrix[{{
+		blockMatrix[{{zeroMatrix[qRows-hRows,hRows],IdentityMatrix[qRows-hRows]}}]},{theBottom}}]],busyRes[[1]]]},
 {bmats,phimat,fmat}]]]]]]]]
 
 symbolicComputeB[hmat_?MatrixQ,qmat_?MatrixQ]:=
@@ -346,8 +387,87 @@ blockMatrix[{{hfb . MatrixPower[bbar,ilag],zeroMatrix[hrows,hrows*(ilag)]}}]]},
 hpart+bpart]]]]]]]
 
 symbolicAMAVersion[]:="$Revision: 2.0 $ $Date: 2011/02/04 $"
-Print["done reading SymbolicAMA"]
+
+
+
+
+computeDelXPath[bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
+With[{neq=Length[bMat],numz=Length[psiMat[[1]]]},
+With[{nleads=Length[fMat]/neq,numNonZeroZ=Length[zPath]/numz},
+With[{preMat=makePreMat[neq,nleads],
+postMats=makePostMat[phiMat,psiMat,#,nleads]&/@Partition[zPath,numz],
+fPows=NestList[fMat .#&,IdentityMatrix[Length[fMat]],numNonZeroZ-1]},
+With[{theProds=MapThread[#1 .#2&,{fPows,postMats}]},
+preMat . (Plus @@ theProds)]]]]/;
+And[isSquare[phiMat],isSquare[fMat],Length[bMat]==Length[phiMat],
+Mod[Length[fMat],Length[phiMat]]==0,Length[psiMat]==Length[phiMat],
+Mod[Length[zPath],Length[psiMat[[1]]]]==0]
+
+
+computeXNext[xInit_?MatrixQ,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
+With[{neq=Length[bMat],numz=Length[psiMat[[1]]]},
+With[{nleads=Length[fMat]/neq,numNonZeroZ=Length[zPath]/numz,
+theDel=computeDelXPath[bMat,phiMat,fMat,psiMat,zPath]},
+bMat . xInit + theDel]]
+
+
+computeXPath[xInit_?MatrixQ,pathLength_Integer,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
+With[{neq=Length[bMat],numz=Length[psiMat[[1]]]},
+With[{nleads=Length[fMat]/neq,numNonZeroZ=Length[zPath]/numz,
+theDel=computeDelXPath[bMat,phiMat,fMat,psiMat,zPath]},
+bMat . xInit + theDel]]
+
+computeXPath[xInit_?MatrixQ,0,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:={}
+
+computeXPath[xInit_?MatrixQ,pathLength_Integer,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
+With[{nxtX=computeXNext[xInit,bMat,phiMat,fMat,psiMat,zPath]},
+Join[nxtX,computeXPath[updateXinit[xInit,nxtX],
+pathLength-1,bMat,phiMat,fMat,psiMat,updateZ[zPath,Length[psiMat[[1]]]]]]]
+
+updateXinit[oldX_?MatrixQ,nxtX_?MatrixQ]:=
+Join[Drop[oldX,Length[nxtX]],nxtX]
+
+
+updateZ[oldZ_?MatrixQ,numZ_Integer]:=
+Join[Drop[oldZ,numZ],ConstantArray[0,{numZ,1}]]
+
+
+
+
+
+chkComputeDelXPath[bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
+And[isSquare[phiMat],isSquare[fMat],Length[bMat]==Length[phiMat],
+Mod[Length[fMat],Length[phiMat]]==0,Length[psiMat]==Length[phiMat],
+Mod[Length[zPath],Length[psiMat[[1]]]]==0]
+
+
+vectorOfMats[vom_List]:=
+With[{matsQ=MatrixQ/@vom},
+If[And @@ matsQ,Length[Union[Dimensions /@vom]]==1,False]]
+
+
+
+
+makePreMat[neq_Integer,1]:=IdentityMatrix[neq]
+makePreMat[neq_Integer,nleads_Integer]:=
+blockMatrix[{{ConstantArray[0,{neq,neq*(nleads-1)}],IdentityMatrix[neq]}}]
+
+makePostMat[phiMat_?MatrixQ,psiMat_?MatrixQ,zMat_?MatrixQ,nleads_Integer]:=
+With[{neq=Length[phiMat],zCols=Length[zMat[[1]]]},
+blockMatrix[{{ConstantArray[0,{neq*(nleads-1),zCols}]},{phiMat.psiMat.zMat}}]]
+
+makePostMat[phiMat_?MatrixQ,psiMat_?MatrixQ,zMat_?MatrixQ,1]:=
+With[{neq=Length[phiMat],zCols=Length[zMat[[1]]]},
+phiMat.psiMat.zMat]
+
+
+
+
+isSquare[mat_?MatrixQ]:=Length[mat]==Length[mat[[1]]]
+isSquare[{{}}]=False
+
 
 End[] (* End Private Context *)
 
 EndPackage[]
+Print["done reading SymbolicAMA"]
