@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-BeginPackage["AMAModel`"]
+BeginPackage["AMAModel`",{"ProtectedSymbols`"}]
 
 validateAMAModel::usage = "validateAMAModel  "
 
@@ -42,19 +42,19 @@ latexOutName[fName_String]:=StringReplace[fName,".xml"->".tex"]
 
 
 stateVariables[eqns_List]:=With[{vars=Variables[eqns]},
-	Union[Cases[vars,xx_[Global`t+yy_.]->xx,Infinity]]]
+	Union[Cases[vars,xx_[ProtectedSymbols`t+yy_.]->xx,Infinity]]]
 lagsLeads[eqns_List]:=With[{vars=Variables[eqns]},
-	With[{allEm=Sort[Cases[vars,xx_[Global`t+yy_.]->yy,Infinity]]},
+	With[{allEm=Sort[Cases[vars,xx_[ProtectedSymbols`t+yy_.]->yy,Infinity]]},
 		{First[allEm],Last[allEm]}]]
 
 fullVec[eqns_List]:=
 With[{sVars=stateVariables[eqns],lls=Range @@ lagsLeads[eqns]},
-Flatten[Through[sVars[Global`t+#]]&/@lls]]
+Flatten[Through[sVars[ProtectedSymbols`t+#]]&/@lls]]
 
 
 fullVec[eqns_List,sVars_List]:=
 With[{lls=Range @@ lagsLeads[eqns]},
-Flatten[Through[sVars[Global`t+#]]&/@lls]]
+Flatten[Through[sVars[ProtectedSymbols`t+#]]&/@lls]]
 
 equationsToMatrix[eqns_List]:=With[{fv=fullVec[eqns]},
 	Transpose[D[eqns,#]&/@fv]]
