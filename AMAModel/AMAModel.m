@@ -8,6 +8,9 @@ generateMathAMAModel::usage = "generateMathAMAModel  "
 
 generateLaTeXAMAModel::usage = "generateLaTeXAMAModel  "
 
+numericLinearizeSystemForOBC::usage="numericLinearizeSystemForOBC[eqns_List]"
+symbolicLinearizeSystemForOBC::usage="symbolicLinearizeSystemForOBC[eqns_List]"
+
 
 
 equationsToMatrix::usage = "equationsToMatrix  "
@@ -62,6 +65,22 @@ equationsToMatrix[eqns_List]:=With[{fv=fullVec[eqns]},
 
 equationsToMatrix[eqns_List,vars_List]:=With[{fv=fullVec[eqns,vars]},
 	Transpose[D[eqns,#]&/@fv]]	
+
+
+
+numericLinearizeSystemForOBC[eqns_List]:=
+Module[{noCnstr=eqns/.{eps[_][_]->0,eqvdIf[_,xx_,_]->xx},zf,hr,
+bmat,phimat,fmat},(*Print[noCnstr];*)
+With[{hmat=equationsToMatrix[noCnstr]},(*Print[hmat];*)
+{ig,ig,ig,ig,qmat,ig,ig,ig}=numericAMA[hmat,1,1];(*Print[zf,hf];*)
+Print["need to generalize to actually compute qmat"];
+{hmat,qmat,{bmat,phimat,fmat}=numericComputeBPhiF[hmat,qmat]}
+]]
+symbolicLinearizeSystemForOBC[eqns_List]:=
+Module[{noCnstr=eqns/.{eps[_][_]->0,eqvdIf[_,xx_,_]->xx},zf,hr,
+bmat,phimat,fmat},(*Print[noCnstr];*)
+With[{hmat=equationsToMatrix[noCnstr]},Print["symbolicLinearize:",hmat];
+]]
 End[] (* End Private Context *)
 
 EndPackage[]
