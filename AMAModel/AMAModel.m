@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-BeginPackage["AMAModel`",{"ProtectedSymbols`"}]
+BeginPackage["AMAModel`",{"ProtectedSymbols`","NumericAMA`","SymbolicAMA`"}]
 
 validateAMAModel::usage = "validateAMAModel  "
 
