@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-BeginPackage["AMAModelDefinition`"]
+BeginPackage["AMAModelDefinition`","ProtectedSymbols`"]
 
 makeParamSubs::usage = "makeParamSubs  "
 
@@ -28,7 +28,7 @@ makeShockSubs[name_String]:=With[
 
 getEqns[name_String]:=Global`AMAModelDefinition[name][[5,2]]
 
-ssValSubs=(xx_)[Global`t + (_.)] :> ToExpression[ToString[xx]<>"SSVal"]
+ssValSubs=(xx_)[t + (_.)] :> ToExpression[ToString[xx]<>"SSVal"]
 
 End[] (* End Private Context *)
 

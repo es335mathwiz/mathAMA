@@ -306,7 +306,7 @@ With[{lu=LUDecomposition[matA]},Transpose[LUBackSubstitution[lu,#]&/@Transpose[m
 vec[mat_?MatrixQ]:=Transpose[{Flatten[Transpose[mat]]}];
 
 symbolicEigenvecSeries[aMat_?MatrixQ,lam_,varDegsPos_?MatrixQ]:=
-With[{dim=Dimensions[aMat][[1]]},
+With[{},
 	With[{nSpace=symbolicEigNS[aMat,lam,varDegsPos]},
 Map[seriesAVal[#,varDegsPos]&,nSpace,{2}]]]
 
@@ -405,15 +405,15 @@ Mod[Length[zPath],Length[psiMat[[1]]]]==0]
 
 
 computeXNext[xInit_?MatrixQ,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
-With[{neq=Length[bMat],numz=Length[psiMat[[1]]]},
-With[{nleads=Length[fMat]/neq,numNonZeroZ=Length[zPath]/numz,
+With[{},
+With[{
 theDel=computeDelXPath[bMat,phiMat,fMat,psiMat,zPath]},
 bMat . xInit + theDel]]
 
 
 computeXPath[xInit_?MatrixQ,pathLength_Integer,bMat_?MatrixQ,phiMat_?MatrixQ,fMat_?MatrixQ,psiMat_?MatrixQ,zPath_?MatrixQ]:=
-With[{neq=Length[bMat],numz=Length[psiMat[[1]]]},
-With[{nleads=Length[fMat]/neq,numNonZeroZ=Length[zPath]/numz,
+With[{},
+With[{
 theDel=computeDelXPath[bMat,phiMat,fMat,psiMat,zPath]},
 bMat . xInit + theDel]]
 
@@ -457,7 +457,7 @@ With[{neq=Length[phiMat],zCols=Length[zMat[[1]]]},
 blockMatrix[{{ConstantArray[0,{neq*(nleads-1),zCols}]},{phiMat.psiMat.zMat}}]]
 
 makePostMat[phiMat_?MatrixQ,psiMat_?MatrixQ,zMat_?MatrixQ,1]:=
-With[{neq=Length[phiMat],zCols=Length[zMat[[1]]]},
+With[{},
 phiMat.psiMat.zMat]
 
 
