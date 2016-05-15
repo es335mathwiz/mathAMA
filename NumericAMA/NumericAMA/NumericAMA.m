@@ -98,7 +98,7 @@ numericShiftRightAndRecord[{auxiliaryConditionsSoFar_,hMatPreShifts_}]:=
                         {auxiliaryConditionsSoFar,{}},hMatPreShifts][[-1]]]]
 
 
-
+(*
 numericComputeAnnihilator[amat_]:=
 With[{adim=Length[amat],
   fa=Flatten[amat]},
@@ -111,8 +111,10 @@ With[{adim=Length[amat],
    Join[qr,Drop[
 Apply[Join,numericExtendToBasis[qr]],
 Length[qr]]]]]]];
+*)
 
-
+numericComputeAnnihilator[amat_]:=
+QRDecomposition[amat,Pivoting->True][[1]]
 
 
 numericAnnihilateRows[hmat_]:=
