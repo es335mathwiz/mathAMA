@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-BeginPackage["AMAModelDefinition`","ProtectedSymbols`"]
+BeginPackage["AMAModelDefinition`",{"ProtectedSymbols`"}]
 
 makeParamSubs::usage = "makeParamSubs  "
 

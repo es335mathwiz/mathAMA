@@ -82,6 +82,14 @@ symbolicEigNS::usage = "symbolicEigNS  "
 seriesAVal::usage = "seriesAVal  "
 
 genericQmat::usage="genericQmat"
+
+sparseToDenseMat::usage="sparseToDenseMat"
+
+denseColToSparseMat::usage="denseColToSparseMat"
+
+denseToSparseMat::usage="denseToSparseMat"
+
+
 Begin["`Private`"] (* Begin Private Context *) 
 
 zeroMatrix[anInt_Integer]:=ConstantArray[0,{anInt,anInt}]
@@ -466,6 +474,29 @@ phiMat.psiMat.zMat]
 isSquare[mat_?MatrixQ]:=Length[mat]==Length[mat[[1]]]
 isSquare[{{}}]=False
 
+
+presprow[aRow_List]:=
+With[{allnz=Complement[Range[Length[aRow]],Flatten[Position[Chop[aRow],0]]]},
+With[{allv=aRow[[allnz]]},{allv,allnz}]]
+
+
+denseToSparseMat[mat_List]:=
+With[{res=presprow/@ mat},
+With[{lens=Length[#[[1]]]&/@res},Append[blockMatrix @@ {{res}},1+FoldList[Plus,0,lens]]]]
+
+
+denseColToSparseMat[vec_List]:=
+{vec,Table[1,{Length[vec]}],Range[Length[vec]+1]}
+
+sparseToDenseMat[rows_,cols_,a_List,ja_List,ia_List]:=
+Module[{s=zeroMatrix[rows,cols]},
+With[{rowBounds=Range[#[[1]],#[[2]]-1]&/@Partition[ia,2,1]},
+With[{assn=Transpose /@ 
+		Transpose[{Part[ja,#1] & /@ rowBounds,Part[a,#1] & /@ rowBounds}]},
+MapIndexed[Function[{x,pos},
+Map[(s[[pos[[1]],#1[[1]]]]=#1[[2]])&,x]],assn];
+s
+]]]
 
 End[] (* End Private Context *)
 

@@ -126,7 +126,7 @@ numericAnnihilateRows[hmat_]:=
 
 numericAMA[preHmat_,lags_Integer,ilag_Integer]:=
 With[{rescaler=IdentityMatrix[Length[preHmat]]
-(*(DiagonalMatrix[(1/Norm /@ preHmat)])*)},Print["using version in eclipse"];
+(*(DiagonalMatrix[(1/Norm /@ preHmat)])*)},
 With[{hmat=rescaler. preHmat},
 With[{hrows=Length[hmat]},
 With[{leads=(Length[hmat[[1]]]/hrows) - (1+lags)},
